@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Verification</title>
+
+  <!-- Embedded CSS -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #a09e9e;
+      color: white;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .container {
+      background: #1f1f1f;
+      display: inline-block;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+
+    #qr {
+      margin: 20px 0;
+      width: 200px;
+      height: 200px;
+    }
+
+    #timer {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Verification QR Code</h1>
+    <img id="qr" src="" alt="QR Code">
+    <div id="timer">30</div>
+  </div>
+
+  <!-- Embedded JS -->
+  <script>
+    let countdown = 30;
+
+    function updateQRCode() {
+      fetch('backend/generate_qr.php')
+        .then(response => response.blob())
+        .then(imageBlob => {
+          document.getElementById('qr').src = URL.createObjectURL(imageBlob);
+          countdown = 30;
+        });
+    }
+
+    function startTimer() {
+      setInterval(() => {
+        countdown--;
+        document.getElementById('timer').textContent = countdown;
+        if (countdown <= 0) updateQRCode();
+      }, 1000);
+    }
+
+    window.onload = () => {
+      updateQRCode();
+      startTimer();
+    };
+  </script>
+
+</body>
+</html>
